@@ -43,6 +43,7 @@ class CustomerStatementBuilder
         $openingBalance = $this->balanceBefore($distributor->id, $fromDate);
 
         $entries = CustomerLedgerEntry::query()
+            ->withoutCancelledDocuments()
             ->where('distributor_id', $distributor->id)
             ->when($fromDate !== null, fn ($query) => $query->whereDate('entry_date', '>=', $fromDate))
             ->when($toDate !== null, fn ($query) => $query->whereDate('entry_date', '<=', $toDate))
@@ -105,6 +106,7 @@ class CustomerStatementBuilder
         }
 
         $result = CustomerLedgerEntry::query()
+            ->withoutCancelledDocuments()
             ->where('distributor_id', $distributorId)
             ->whereDate('entry_date', '<', $fromDate)
             ->selectRaw('COALESCE(SUM(debit), 0) - COALESCE(SUM(credit), 0) as balance')

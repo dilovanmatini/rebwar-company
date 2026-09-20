@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Enums\DocumentStatus;
 use App\Enums\LedgerReferenceType;
 use App\Models\Concerns\Auditable;
 use Database\Factories\CustomerLedgerEntryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,5 +45,32 @@ class CustomerLedgerEntry extends Model
     public function distributor(): BelongsTo
     {
         return $this->belongsTo(Distributor::class);
+    }
+
+    /**
+     * @param  Builder<CustomerLedgerEntry>  $query
+     */
+    #[Scope]
+    protected function withoutCancelledDocuments(Builder $query): void
+    {
+        $query
+            ->whereNot(function (Builder $query): void {
+                $query->where('reference_type', LedgerReferenceType::Invoice)
+                    ->whereIn(
+                        'reference_id',
+                        SalesInvoice::query()
+                            ->where('status', DocumentStatus::Cancelled)
+                            ->select('id'),
+                    );
+            })
+            ->whereNot(function (Builder $query): void {
+                $query->where('reference_type', LedgerReferenceType::Receipt)
+                    ->whereIn(
+                        'reference_id',
+                        PaymentReceipt::query()
+                            ->where('status', DocumentStatus::Cancelled)
+                            ->select('id'),
+                    );
+            });
     }
 }

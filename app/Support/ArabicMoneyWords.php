@@ -38,7 +38,7 @@ final class ArabicMoneyWords
      */
     public static function phrase(mixed $amount): string
     {
-        return 'فقط '.self::from($amount).' لا غير';
+        return self::from($amount).' فقط ';
     }
 
     private static function isoCode(): string

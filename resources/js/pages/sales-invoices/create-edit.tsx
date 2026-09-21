@@ -212,19 +212,7 @@ export default function SalesInvoicesCreateEdit({
                         onChange={(lines) => form.setData('lines', lines)}
                     />
 
-                    <div className="grid gap-2">
-                        <Label htmlFor="notes">ملاحظات</Label>
-                        <Textarea
-                            id="notes"
-                            rows={3}
-                            value={form.data.notes}
-                            disabled={!can_edit}
-                            onChange={(event) =>
-                                form.setData('notes', event.target.value)
-                            }
-                        />
-                        <InputError message={form.errors.notes} />
-                    </div>
+
 
                     <div className="grid gap-4 rounded-lg border border-gray-200 p-4 sm:grid-cols-3 dark:border-gray-700">
                         <div className="grid gap-2">
@@ -259,6 +247,20 @@ export default function SalesInvoicesCreateEdit({
                                 className="font-semibold"
                             />
                         </div>
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="notes">ملاحظات</Label>
+                        <Textarea
+                            id="notes"
+                            rows={3}
+                            value={form.data.notes}
+                            disabled={!can_edit}
+                            onChange={(event) =>
+                                form.setData('notes', event.target.value)
+                            }
+                        />
+                        <InputError message={form.errors.notes} />
                     </div>
                 </form>
 

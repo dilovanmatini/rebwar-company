@@ -17,7 +17,7 @@ test('arabic money words spells usd amounts with currency name', function () {
         ->and(ArabicMoneyWords::from(2))->toBe('دولاران')
         ->and(ArabicMoneyWords::from(2.50))->toBe('دولاران وخمسون سنتا')
         ->and(ArabicMoneyWords::from(0))->toBe('صفر دولار')
-        ->and(ArabicMoneyWords::phrase(100))->toBe('فقط مئة دولار لا غير');
+        ->and(ArabicMoneyWords::phrase(100))->toBe('مئة دولار فقط ');
 });
 
 test('arabic money words spells iqd amounts with currency name', function () {
@@ -26,5 +26,5 @@ test('arabic money words spells iqd amounts with currency name', function () {
     expect(ArabicMoneyWords::from(100))->toBe('مئة دينار')
         ->and(ArabicMoneyWords::from(25.5))->toBe('خمسة وعشرون دينارا وخمسمئة فلس')
         ->and(ArabicMoneyWords::from(0))->toBe('صفر دينار')
-        ->and(ArabicMoneyWords::phrase(100))->toBe('فقط مئة دينار لا غير');
+        ->and(ArabicMoneyWords::phrase(100))->toBe('مئة دينار فقط ');
 });

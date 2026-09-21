@@ -1,5 +1,11 @@
 {
  "name": "Rebwar",
+ "short_name": "Rebwar",
+ "description": "Rebwar is a company that sells products to the public",
+ "start_url": "/",
+ "display": "standalone",
+ "background_color": "#ffffff",
+ "theme_color": "#000000",
  "icons": [
   {
    "src": "\/android-icon-36x36.png",

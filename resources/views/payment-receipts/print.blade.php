@@ -13,18 +13,18 @@
         body {
             font-family: {!! \App\Support\PrintFont::familyStack() !!};
             direction: rtl;
-            color: #111827;
-            font-size: 12px;
-            line-height: 1.55;
+            color: #111;
+            font-size: 13px;
+            line-height: 1.4;
             margin: 0;
-            padding: 28px 36px;
+            padding: 24px 28px;
             background: #fff;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
 
         .actions {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .actions a,
@@ -42,246 +42,168 @@
             font-size: 12px;
         }
 
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 24px;
-            margin-bottom: 28px;
+        .voucher {
+            max-width: 760px;
+            margin: 0 auto;
         }
 
-        .company {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .company-brand {
+        .brand {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-
-        .company-brand img {
-            max-height: 72px;
-            max-width: 180px;
-            object-fit: contain;
-        }
-
-        .company-name {
-            font-size: 20px;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .company-details {
-            color: #374151;
-            white-space: pre-wrap;
-            line-height: 1.6;
-        }
-
-        .invoice-meta {
-            text-align: end;
-            flex-shrink: 0;
-            min-width: 180px;
-        }
-
-        .invoice-title {
-            margin: 0 0 6px;
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            line-height: 1.1;
-        }
-
-        .invoice-number {
-            margin: 0 0 16px;
-            font-size: 13px;
-            color: #111827;
-        }
-
-        .balance-label {
-            margin: 0;
-            font-size: 12px;
-            color: #4b5563;
-        }
-
-        .balance-amount {
-            margin: 2px 0 0;
-            font-size: 22px;
-            font-weight: 700;
-            font-variant-numeric: tabular-nums;
-            line-height: 1.2;
-        }
-
-        .parties {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 32px;
-            margin-bottom: 28px;
-        }
-
-        .bill-to {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .section-label {
-            margin: 0 0 6px;
-            font-weight: 700;
-        }
-
-        .bill-to-name {
-            margin: 0 0 2px;
-            font-weight: 600;
-        }
-
-        .bill-to-line {
-            margin: 0;
-            color: #374151;
-            white-space: pre-wrap;
-        }
-
-        .dates {
-            flex-shrink: 0;
-            border-collapse: collapse;
-        }
-
-        .dates th,
-        .dates td {
-            padding: 2px 0;
-            vertical-align: top;
-            font-weight: 400;
-        }
-
-        .dates th {
-            padding-inline-end: 12px;
-            text-align: end;
-            color: #4b5563;
-            white-space: nowrap;
-        }
-
-        .dates td {
-            text-align: start;
-            font-variant-numeric: tabular-nums;
-        }
-
-        table.lines {
-            width: 100%;
-            border-collapse: collapse;
+            justify-content: center;
+            gap: 10px;
             margin-bottom: 8px;
         }
 
-        table.lines th {
-            background: #7eb6ef;
-            color: #fff;
-            font-weight: 600;
-            padding: 8px 10px;
-            text-align: start;
-            border: none;
+        .brand img {
+            max-height: 48px;
+            max-width: 120px;
+            object-fit: contain;
         }
 
-        table.lines th.col-num,
-        table.lines th.col-amount {
-            text-align: end;
-        }
-
-        table.lines th.col-index {
-            width: 36px;
-            text-align: center;
-        }
-
-        table.lines td {
-            padding: 9px 10px;
-            border-bottom: 1px solid #e5e7eb;
-            vertical-align: top;
-            text-align: start;
-        }
-
-        table.lines tbody tr:nth-child(even) td {
-            background: #f9fafb;
-        }
-
-        table.lines td.col-index {
-            text-align: center;
-            color: #6b7280;
-        }
-
-        table.lines td.col-num {
-            text-align: end;
-            font-variant-numeric: tabular-nums;
-            white-space: nowrap;
-        }
-
-        .line-name {
-            font-weight: 500;
-        }
-
-        .summary-wrap {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 4px;
-            margin-bottom: 28px;
-        }
-
-        .summary {
-            width: 260px;
-            border-collapse: collapse;
-        }
-
-        .summary td {
-            padding: 6px 0;
-        }
-
-        .summary .label {
-            text-align: start;
-            color: #374151;
-            padding-inline-end: 16px;
-        }
-
-        .summary .value {
-            text-align: end;
-            font-variant-numeric: tabular-nums;
-            white-space: nowrap;
-        }
-
-        .summary .total-row td {
-            background: #e5e7eb;
+        .brand-name {
+            margin: 0;
+            font-size: 16px;
             font-weight: 700;
-            padding: 8px 10px;
         }
 
-        .notes {
-            margin-bottom: 20px;
+        .company-details {
+            text-align: center;
+            color: #374151;
             white-space: pre-wrap;
+            line-height: 1.6;
+            margin-bottom: 12px;
         }
 
-        .notes strong {
-            display: block;
-            margin-bottom: 4px;
+        .head {
+            position: relative;
+            min-height: 58px;
+            margin-bottom: 18px;
+        }
+
+        .title {
+            margin: 0;
+            padding-top: 8px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 6px;
+        }
+
+        table.id-box {
+            position: absolute;
+            top: 0;
+            inset-inline-end: 0;
+            border-collapse: collapse;
+            width: 210px;
+        }
+
+        table.id-box td {
+            border: 1px solid #111;
+            padding: 5px 8px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        table.id-box .label {
+            width: 72px;
+            text-align: center;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        table.id-box .value {
+            text-align: center;
+        }
+
+        table.form {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 8px 7px;
+        }
+
+        table.form td {
+            vertical-align: middle;
+        }
+
+        table.form.amounts {
+            width: max-content;
+            max-width: 100%;
+            margin-inline-end: auto;
+            border-spacing: 4px 7px;
+        }
+
+        table.form.amounts .box {
+            width: 200px;
+        }
+
+        table.form.amounts .label-box {
+            width: 88px;
+        }
+
+        table.balances td.box,
+        table.balances td.label-box {
+            width: 25%;
+        }
+
+        .box {
+            border: 1px solid #111;
+            padding: 7px 10px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            min-width: 96px;
+        }
+
+        .label-box {
+            border: 1px solid #111;
+            padding: 7px 10px;
+            text-align: center;
+            font-weight: 600;
+            white-space: nowrap;
+            width: 1%;
+        }
+
+        .unit {
+            white-space: nowrap;
+            width: 1%;
+            padding: 0;
+            text-align: start;
+        }
+
+        .plain {
+            white-space: nowrap;
+            width: 1%;
+            text-align: center;
+            padding: 0 6px;
+        }
+
+        .grow {
+            width: auto;
+        }
+
+        .amount-words {
+            margin: 10px 8px 0;
+            padding: 8px 10px;
+            border: 1px solid #111;
+            line-height: 1.7;
+        }
+
+        .amount-words strong {
+            margin-inline-end: 6px;
         }
 
         .footer {
-            margin-top: 24px;
-            padding-top: 14px;
+            margin-top: 18px;
+            padding-top: 12px;
             border-top: 1px solid #d1d5db;
             color: #374151;
             white-space: pre-wrap;
             line-height: 1.7;
         }
 
-        .amount-words {
-            margin-top: -12px;
-            margin-bottom: 28px;
-            padding: 10px 12px;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            line-height: 1.7;
-        }
-
-        .amount-words strong {
-            margin-inline-end: 6px;
+        @page {
+            size: A4 portrait;
+            margin: 10mm;
         }
 
         @media print {
@@ -290,7 +212,7 @@
             }
 
             body {
-                padding: 16px 20px;
+                padding: 0;
             }
         }
     </style>
@@ -301,88 +223,91 @@
         <a href="{{ $back_url }}">رجوع</a>
     </div>
 
-    <div class="top">
-        <div class="company">
-            <div class="company-brand">
-                <img src="{{ $logo_url }}" alt="{{ $app_name }}">
-                <p class="company-name">{{ $app_name }}</p>
-            </div>
-            @if ($invoice_header)
-                <div class="company-details">{{ $invoice_header }}</div>
-            @endif
+    <div class="voucher">
+        <div class="brand">
+            <img src="{{ $logo_url }}" alt="{{ $app_name }}">
+            <p class="brand-name">{{ $app_name }}</p>
         </div>
 
-        <div class="invoice-meta">
-            <h1 class="invoice-title">سند قبض</h1>
-            <p class="invoice-number">رقم السند # {{ $receipt['number'] }}</p>
-            <p class="balance-label">إجمالي السند</p>
-            <p class="balance-amount">{{ $receipt['total_amount'] }}</p>
-        </div>
-    </div>
+        @if ($invoice_header)
+            <div class="company-details">{{ $invoice_header }}</div>
+        @endif
 
-    <div class="parties">
-        <div class="bill-to">
-            <p class="section-label">من</p>
-            <p class="bill-to-name">{{ $receipt['distributor']['name'] }}</p>
-            @if ($receipt['distributor']['contact_person'])
-                <p class="bill-to-line">{{ $receipt['distributor']['contact_person'] }}</p>
-            @endif
-            @if ($receipt['distributor']['phone'])
-                <p class="bill-to-line">{{ $receipt['distributor']['phone'] }}</p>
-            @endif
-            @if ($receipt['distributor']['address'])
-                <p class="bill-to-line">{{ $receipt['distributor']['address'] }}</p>
-            @endif
+        <div class="head">
+            <h1 class="title">سند قبض</h1>
+            <table class="id-box">
+                <tr>
+                    <td class="label">الرقم</td>
+                    <td class="value">{{ $receipt['number'] }}</td>
+                </tr>
+                <tr>
+                    <td class="label">التاريخ</td>
+                    <td class="value">{{ $receipt['receipt_date'] }}</td>
+                </tr>
+            </table>
         </div>
 
-        <table class="dates">
+        <table class="form amounts">
             <tr>
-                <th>تاريخ السند :</th>
-                <td>{{ $receipt['receipt_date'] ?: '—' }}</td>
+                <td class="label-box">المبلغ</td>
+                <td class="box">{{ $receipt['usd']['amount'] }}</td>
+                <td class="unit">$</td>
+                <td class="plain">مايعادل</td>
+                <td class="box">{{ $receipt['iqd']['equivalent'] }}</td>
+                <td class="unit">دينار</td>
             </tr>
             <tr>
-                <th>طريقة الدفع :</th>
-                <td>{{ $receipt['payment_method_label'] }}</td>
-            </tr>
-            <tr>
-                <th>الحالة :</th>
-                <td>{{ $receipt['status_label'] }}</td>
+                <td></td>
+                <td class="box">{{ $receipt['iqd']['amount'] }}</td>
+                <td class="unit">دينار</td>
+                <td></td>
+                <td class="box">{{ $receipt['usd']['equivalent'] }}</td>
+                <td class="unit">$</td>
             </tr>
         </table>
-    </div>
 
-    <div class="summary-wrap">
-        <table class="summary">
+        <table class="form">
             <tr>
-                <td class="label">المبلغ السابق</td>
-                <td class="value">{{ $receipt['balance_before'] }}</td>
+                <td class="label-box">نوع القبض</td>
+                <td class="box grow">{{ $receipt['receipt_type'] }}</td>
             </tr>
             <tr>
-                <td class="label">مبلغ السند</td>
-                <td class="value">{{ $receipt['total_amount'] }}</td>
-            </tr>
-            <tr class="total-row">
-                <td class="label">المبلغ المتبقي</td>
-                <td class="value">{{ $receipt['balance_after'] }}</td>
+                <td class="label-box">الأسم</td>
+                <td class="box grow">{{ $receipt['distributor_name'] }}</td>
             </tr>
         </table>
-    </div>
 
-    <div class="amount-words">
-        <strong>المبلغ كتابةً:</strong>
-        {{ $receipt['total_amount_in_words'] }}
-    </div>
+        <table class="form balances">
+            <tr>
+                <td class="label-box">ر.سابق للزبون $</td>
+                <td class="box">{{ $receipt['usd']['before'] }}</td>
+                <td class="label-box">المتبقي $</td>
+                <td class="box">{{ $receipt['usd']['after'] }}</td>
+            </tr>
+            <tr>
+                <td class="label-box">ر.سابق دينار</td>
+                <td class="box">{{ $receipt['iqd']['before'] }}</td>
+                <td class="label-box">المتبقي دينار</td>
+                <td class="box">{{ $receipt['iqd']['after'] }}</td>
+            </tr>
+        </table>
 
-    @if ($receipt['notes'])
-        <div class="notes">
-            <strong>ملاحظات</strong>
-            <div>{{ $receipt['notes'] }}</div>
+        <table class="form">
+            <tr>
+                <td class="label-box">الملاحظات</td>
+                <td class="box grow">{{ $receipt['notes'] }}</td>
+            </tr>
+        </table>
+
+        <div class="amount-words">
+            <strong>المبلغ كتابةً:</strong>
+            {{ $receipt['total_amount_in_words'] }}
         </div>
-    @endif
 
-    @if ($invoice_footer)
-        <div class="footer">{{ $invoice_footer }}</div>
-    @endif
+        @if ($invoice_footer)
+            <div class="footer">{{ $invoice_footer }}</div>
+        @endif
+    </div>
 
     <script>
         window.addEventListener('load', () => {

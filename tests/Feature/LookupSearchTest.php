@@ -4,6 +4,8 @@ use App\Enums\UserRole;
 use App\Models\Category;
 use App\Models\Distributor;
 use App\Models\Product;
+use App\Models\SalesInvoice;
+use App\Models\SalesInvoiceLine;
 use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\User;
@@ -70,6 +72,66 @@ test('authorized users can search lookup endpoints', function () {
         ]))
         ->assertOk()
         ->assertJsonStructure(['data']);
+});
+
+test('product lookup includes last posted selling price and barcode meta', function () {
+    $admin = User::factory()->administrator()->create();
+    $product = Product::factory()->create([
+        'name_ar' => 'منتج سعر',
+        'code' => 'PR-9',
+        'barcode' => '6281000000001',
+    ]);
+
+    $draft = SalesInvoice::factory()->create();
+    SalesInvoiceLine::factory()->create([
+        'sales_invoice_id' => $draft->id,
+        'product_id' => $product->id,
+        'unit_price' => 99,
+    ]);
+
+    $older = SalesInvoice::factory()->posted($admin)->create([
+        'invoice_date' => '2026-01-01',
+    ]);
+    SalesInvoiceLine::factory()->create([
+        'sales_invoice_id' => $older->id,
+        'product_id' => $product->id,
+        'unit_price' => 10,
+    ]);
+
+    $newer = SalesInvoice::factory()->posted($admin)->create([
+        'invoice_date' => '2026-08-01',
+    ]);
+    SalesInvoiceLine::factory()->create([
+        'sales_invoice_id' => $newer->id,
+        'product_id' => $product->id,
+        'unit_price' => 12.50,
+    ]);
+
+    $this->actingAs($admin)
+        ->getJson(route('lookups.products', ['search' => '6281000000001']))
+        ->assertOk()
+        ->assertJsonPath('data.0.value', $product->id)
+        ->assertJsonPath('data.0.label', 'PR-9 — منتج سعر')
+        ->assertJsonPath('data.0.meta.code', 'PR-9')
+        ->assertJsonPath('data.0.meta.barcode', '6281000000001')
+        ->assertJsonPath('data.0.meta.name_ar', 'منتج سعر')
+        ->assertJsonPath('data.0.meta.unit', $product->unit->name)
+        ->assertJsonPath('data.0.meta.last_unit_price', '12.5');
+});
+
+test('product lookup last price is empty when the product was never sold', function () {
+    $admin = User::factory()->administrator()->create();
+    $product = Product::factory()->create([
+        'name_ar' => 'منتج جديد',
+        'code' => 'PR-NEW',
+        'barcode' => null,
+    ]);
+
+    $this->actingAs($admin)
+        ->getJson(route('lookups.products', ['search' => 'منتج جديد']))
+        ->assertOk()
+        ->assertJsonPath('data.0.value', $product->id)
+        ->assertJsonPath('data.0.meta.last_unit_price', null);
 });
 
 test('sales role can lookup products for invoices', function () {

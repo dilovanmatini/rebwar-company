@@ -15,7 +15,7 @@ class CreateEditAction
     public function handle(Request $request, ?SalesInvoice $salesInvoice): Response
     {
         if ($salesInvoice?->exists) {
-            $salesInvoice->load(['lines.product:id,code,name_ar', 'distributor:id,name']);
+            $salesInvoice->load(['lines.product:id,code,barcode,name_ar', 'distributor:id,name']);
 
             return Inertia::render('sales-invoices/create-edit', [
                 'invoice' => [
@@ -36,7 +36,7 @@ class CreateEditAction
                         'quantity' => QuantityDisplay::format($line->quantity),
                         'unit_price' => QuantityDisplay::format($line->unit_price, 2),
                         'line_total' => QuantityDisplay::format($line->line_total, 2),
-                        'product' => $line->product?->only(['id', 'code', 'name_ar']),
+                        'product' => $line->product?->only(['id', 'code', 'barcode', 'name_ar']),
                     ])->values()->all(),
                 ],
                 'selected_distributor' => $salesInvoice->distributor
@@ -54,6 +54,11 @@ class CreateEditAction
                         return [
                             'value' => $line->product->id,
                             'label' => $line->product->selectionLabel(),
+                            'meta' => [
+                                'code' => $line->product->code,
+                                'barcode' => $line->product->barcode,
+                                'name_ar' => $line->product->name_ar,
+                            ],
                         ];
                     })
                     ->filter()

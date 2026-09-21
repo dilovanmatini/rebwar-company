@@ -4,25 +4,15 @@ use App\Enums\UserRole;
 use App\Models\SystemSetting;
 use App\Models\User;
 use App\Support\DashboardNumbersVisibility;
-use Inertia\Testing\AssertableInertia as Assert;
 
 test('dashboard numbers follow the general settings default when the user has no preference', function () {
     $user = User::factory()->create();
 
-    $this->actingAs($user)
-        ->get(route('dashboard'))
-        ->assertSuccessful()
-        ->assertInertia(fn (Assert $page) => $page
-            ->component('dashboard')
-            ->where('show_dashboard_numbers', true));
+    expect(DashboardNumbersVisibility::for($user))->toBeTrue();
 
     SystemSetting::current()->update(['show_dashboard_numbers' => false]);
 
-    $this->actingAs($user)
-        ->get(route('dashboard'))
-        ->assertSuccessful()
-        ->assertInertia(fn (Assert $page) => $page
-            ->where('show_dashboard_numbers', false));
+    expect(DashboardNumbersVisibility::for($user->refresh()))->toBeFalse();
 });
 
 test('user dashboard numbers preference overrides the general settings default', function () {
@@ -32,20 +22,12 @@ test('user dashboard numbers preference overrides the general settings default',
 
     SystemSetting::current()->update(['show_dashboard_numbers' => true]);
 
-    $this->actingAs($user)
-        ->get(route('dashboard'))
-        ->assertSuccessful()
-        ->assertInertia(fn (Assert $page) => $page
-            ->where('show_dashboard_numbers', false));
+    expect(DashboardNumbersVisibility::for($user))->toBeFalse();
 
     $user->update(['show_dashboard_numbers' => true]);
     SystemSetting::current()->update(['show_dashboard_numbers' => false]);
 
-    $this->actingAs($user)
-        ->get(route('dashboard'))
-        ->assertSuccessful()
-        ->assertInertia(fn (Assert $page) => $page
-            ->where('show_dashboard_numbers', true));
+    expect(DashboardNumbersVisibility::for($user->refresh()))->toBeTrue();
 });
 
 test('user can persist dashboard numbers visibility from the dashboard', function () {

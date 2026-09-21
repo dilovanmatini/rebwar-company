@@ -49,6 +49,19 @@ test('administrator can create a draft sales invoice with totals', function () {
         ->and((string) $invoice->lines->first()->line_total)->toBe('100.00');
 });
 
+test('sales invoice create page loads without prefilled lines', function () {
+    $admin = User::factory()->administrator()->create();
+
+    $this->actingAs($admin)
+        ->get(route('sales-invoices.create-edit'))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->component('sales-invoices/create-edit')
+            ->where('invoice', null)
+            ->where('selected_products', [])
+            ->where('can_edit', true));
+});
+
 test('sales invoice create-edit trims trailing zeros on money fields', function () {
     $admin = User::factory()->administrator()->create();
     $product = Product::factory()->create();
@@ -89,7 +102,10 @@ test('sales invoice create-edit trims trailing zeros on money fields', function 
             ->where('invoice.grand_total', '98.95')
             ->where('invoice.lines.0.unit_price', '50')
             ->where('invoice.lines.0.quantity', '2')
-            ->where('invoice.lines.1.unit_price', '2.05'));
+            ->where('invoice.lines.1.unit_price', '2.05')
+            ->where('selected_products.0.value', $product->id)
+            ->where('selected_products.0.meta.name_ar', $product->name_ar)
+            ->where('selected_products.0.meta.code', $product->code));
 });
 
 test('posting a sales invoice decreases stock and creates ledger entries', function () {
@@ -416,17 +432,28 @@ test('posted sales invoice can be printed and draft cannot', function () {
         ->get(route('sales-invoices.print', $posted))
         ->assertSuccessful()
         ->assertSee($posted->number, false)
-        ->assertSee('فاتورة', false)
-        ->assertSee('المبلغ المستحق', false)
-        ->assertSee('إلى', false)
-        ->assertSee('البيان', false)
-        ->assertSee('الإجمالي', false)
-        ->assertSee('>50 $</td>', false)
-        ->assertSee('>100 $</td>', false)
-        ->assertDontSee('50.00', false)
-        ->assertDontSee('100.00', false)
-        ->assertSee('المبلغ كتابةً', false)
-        ->assertSee('فقط مئة دولار لا غير', false)
+        ->assertSee('REBWAR CO.', false)
+        ->assertSee('For General Trading', false)
+        ->assertSee('للتجارة العامة', false)
+        ->assertSee('حضرة السيد', false)
+        ->assertSee('العنوان', false)
+        ->assertSee('التفاصيل', false)
+        ->assertSee('العدد', false)
+        ->assertSee('السعر', false)
+        ->assertSee('الخصم', false)
+        ->assertSee('المبلغ', false)
+        ->assertSee('المجموع الأولي', false)
+        ->assertSee('المجموع النهائي', false)
+        ->assertSee('اسم السائق', false)
+        ->assertSee('رقم السيارة', false)
+        ->assertSee('الغلط و السهو مرجوع للطرفين.', false)
+        ->assertSee('DUHOK', false)
+        ->assertSee($posted->distributor->name, false)
+        ->assertSee('>50.00</td>', false)
+        ->assertSee('>100.00</td>', false)
+        ->assertSee($posted->invoice_date?->format('d-m-Y'), false)
+        ->assertDontSee('المبلغ المستحق', false)
+        ->assertDontSee('المبلغ كتابةً', false)
         ->assertSee('/images/logo.png', false)
         ->assertSee('IBM Plex Sans Arabic', false)
         ->assertSee('/fonts/IBMPlexSansArabic-Regular.ttf', false)
@@ -462,6 +489,48 @@ test('posted sales invoice print uses uploaded logo when present', function () {
         ->assertSuccessful()
         ->assertSee(Storage::disk('public')->url($path), false)
         ->assertDontSee('/images/logo.png', false);
+});
+
+test('posted sales invoice print uses invoice header footer and shows discount', function () {
+    $admin = User::factory()->administrator()->create();
+    $distributor = Distributor::factory()->create([
+        'name' => 'اسماعيل سيتو',
+        'address' => 'شاريا',
+    ]);
+    $product = Product::factory()->create(['name_ar' => 'بيرة فترة دبل']);
+
+    SystemSetting::current()->update([
+        'invoice_header' => 'رأس فاتورة مخصص',
+        'invoice_footer' => 'تذييل فاتورة مخصص',
+    ]);
+
+    $posted = SalesInvoice::factory()->posted($admin)->create([
+        'distributor_id' => $distributor->id,
+        'subtotal' => 100,
+        'discount' => 10,
+        'grand_total' => 90,
+    ]);
+    SalesInvoiceLine::factory()->create([
+        'sales_invoice_id' => $posted->id,
+        'product_id' => $product->id,
+        'quantity' => 2,
+        'unit_price' => 50,
+        'line_total' => 100,
+    ]);
+
+    $this->actingAs($admin)
+        ->get(route('sales-invoices.print', $posted))
+        ->assertSuccessful()
+        ->assertSee('رأس فاتورة مخصص', false)
+        ->assertSee('تذييل فاتورة مخصص', false)
+        ->assertSee('اسماعيل سيتو', false)
+        ->assertSee('شاريا', false)
+        ->assertSee('بيرة فترة دبل', false)
+        ->assertSee('الخصم:', false)
+        ->assertSee('>10.00</span>', false)
+        ->assertSee('>90.00</span>', false)
+        ->assertDontSee('DUHOK', false)
+        ->assertDontSee('الغلط و السهو مرجوع للطرفين.', false);
 });
 
 test('warehouse role cannot manage sales invoices', function () {

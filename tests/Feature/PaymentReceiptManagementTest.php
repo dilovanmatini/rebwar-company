@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Currency;
 use App\Enums\DocumentStatus;
 use App\Enums\LedgerReferenceType;
 use App\Enums\PaymentMethod;
@@ -452,18 +453,30 @@ test('posted payment receipt can be printed and draft cannot', function () {
         ->assertSuccessful()
         ->assertSee($posted->number, false)
         ->assertSee('سند قبض', false)
-        ->assertSee('إجمالي السند', false)
-        ->assertSee('من', false)
-        ->assertSee('المبلغ السابق', false)
-        ->assertSee('مبلغ السند', false)
-        ->assertSee('المبلغ المتبقي', false)
+        ->assertSee('الرقم', false)
+        ->assertSee('التاريخ', false)
+        ->assertSee('07/08/2026', false)
+        ->assertSee('المبلغ', false)
+        ->assertSee('مايعادل', false)
+        ->assertSee('دينار', false)
+        ->assertSee('نوع القبض', false)
+        ->assertSee('ذمم العملاء', false)
+        ->assertSee('الأسم', false)
+        ->assertSee($distributor->name, false)
+        ->assertSee('ر.سابق للزبون $', false)
+        ->assertSee('المتبقي $', false)
+        ->assertSee('ر.سابق دينار', false)
+        ->assertSee('المتبقي دينار', false)
+        ->assertSee('الملاحظات', false)
         ->assertDontSee('رقم الفاتورة', false)
-        ->assertSee('200 $', false)
-        ->assertSee('75 $', false)
-        ->assertSee('125 $', false)
+        ->assertDontSee('إجمالي السند', false)
+        ->assertSee('>200<', false)
+        ->assertSee('>75<', false)
+        ->assertSee('>125<', false)
         ->assertDontSee('75.00', false)
+        ->assertDontSee('200 $', false)
         ->assertSee('المبلغ كتابةً', false)
-        ->assertSee('فقط خمسة وسبعون دولارا لا غير', false)
+        ->assertSee('خمسة وسبعون دولارا فقط', false)
         ->assertSee('/images/logo.png', false)
         ->assertSee('IBM Plex Sans Arabic', false)
         ->assertSee('/fonts/IBMPlexSansArabic-Regular.ttf', false)
@@ -494,4 +507,47 @@ test('posted payment receipt print uses uploaded logo when present', function ()
         ->assertSuccessful()
         ->assertSee(Storage::disk('public')->url($path), false)
         ->assertDontSee('/images/logo.png', false);
+});
+
+test('posted payment receipt print puts iqd amounts in the dinar boxes', function () {
+    $admin = User::factory()->administrator()->create();
+    $distributor = Distributor::factory()->create();
+
+    SystemSetting::current()->update(['currency' => Currency::Iqd]);
+
+    CustomerLedgerEntry::factory()->create([
+        'distributor_id' => $distributor->id,
+        'entry_date' => '2026-08-01',
+        'reference_type' => LedgerReferenceType::Invoice,
+        'reference_id' => 1,
+        'debit' => 500,
+        'credit' => 0,
+    ]);
+
+    $posted = PaymentReceipt::factory()->posted($admin)->create([
+        'distributor_id' => $distributor->id,
+        'amount' => 80,
+        'receipt_date' => '2026-09-15',
+        'notes' => 'تسديد على الحساب',
+    ]);
+
+    CustomerLedgerEntry::factory()->create([
+        'distributor_id' => $distributor->id,
+        'entry_date' => '2026-09-15',
+        'reference_type' => LedgerReferenceType::Receipt,
+        'reference_id' => $posted->id,
+        'debit' => 0,
+        'credit' => 80,
+    ]);
+
+    $this->actingAs($admin)
+        ->get(route('payment-receipts.print', $posted))
+        ->assertSuccessful()
+        ->assertSee('15/09/2026', false)
+        ->assertSee('تسديد على الحساب', false)
+        ->assertSee('>80<', false)
+        ->assertSee('>500<', false)
+        ->assertSee('>420<', false)
+        ->assertSee('المبلغ كتابةً', false)
+        ->assertSee('دينار', false);
 });

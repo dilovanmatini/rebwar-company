@@ -41,7 +41,11 @@ type Props = {
             quantity: string;
             unit_price: string;
             line_total: string;
-            product: { id: number; code: string | null; name_ar: string } | null;
+            product: {
+                id: number;
+                code: string | null;
+                name_ar: string;
+            } | null;
         }>;
     } | null;
     selected_distributor: SearchableSelectOption | null;
@@ -87,7 +91,7 @@ export default function SalesInvoicesCreateEdit({
                   quantity: line.quantity,
                   unit_price: line.unit_price,
               }))
-            : [{ product_id: '', quantity: '', unit_price: '' }],
+            : [],
     });
 
     const subtotal = can_edit
@@ -200,6 +204,14 @@ export default function SalesInvoicesCreateEdit({
                         </div>
                     </div>
 
+                    <SalesInvoiceLinesEditor
+                        lines={form.data.lines}
+                        selectedProducts={selected_products}
+                        errors={form.errors}
+                        readOnly={!can_edit}
+                        onChange={(lines) => form.setData('lines', lines)}
+                    />
+
                     <div className="grid gap-2">
                         <Label htmlFor="notes">ملاحظات</Label>
                         <Textarea
@@ -213,14 +225,6 @@ export default function SalesInvoicesCreateEdit({
                         />
                         <InputError message={form.errors.notes} />
                     </div>
-
-                    <SalesInvoiceLinesEditor
-                        lines={form.data.lines}
-                        selectedProducts={selected_products}
-                        errors={form.errors}
-                        readOnly={!can_edit}
-                        onChange={(lines) => form.setData('lines', lines)}
-                    />
 
                     <div className="grid gap-4 rounded-lg border border-gray-200 p-4 sm:grid-cols-3 dark:border-gray-700">
                         <div className="grid gap-2">

@@ -5,8 +5,6 @@ namespace App\Actions\SalesInvoice;
 use App\Models\SalesInvoice;
 use App\Models\SalesInvoiceLine;
 use App\Models\SystemSetting;
-use App\Support\ArabicMoneyWords;
-use App\Support\MoneyDisplay;
 use App\Support\QuantityDisplay;
 use Illuminate\Http\Response;
 
@@ -21,26 +19,21 @@ class PrintAction
         return response()->view('sales-invoices.print', [
             'invoice' => [
                 'number' => $salesInvoice->number,
-                'invoice_date' => $salesInvoice->invoice_date?->toDateString(),
+                'invoice_date' => $salesInvoice->invoice_date?->format('d-m-Y') ?? '—',
                 'notes' => $salesInvoice->notes,
-                'subtotal' => MoneyDisplay::format($salesInvoice->subtotal, trim: true, thousands: true),
-                'discount' => MoneyDisplay::format($salesInvoice->discount, trim: true, thousands: true),
-                'grand_total' => MoneyDisplay::format($salesInvoice->grand_total, trim: true, thousands: true),
-                'grand_total_in_words' => ArabicMoneyWords::phrase($salesInvoice->grand_total),
-                'remaining_amount' => MoneyDisplay::format($salesInvoice->remainingAmount(), trim: true, thousands: true),
-                'status_label' => $salesInvoice->status->label(),
+                'subtotal' => $this->decimal($salesInvoice->subtotal),
+                'discount' => $this->decimal($salesInvoice->discount),
+                'has_discount' => bccomp((string) $salesInvoice->discount, '0', 2) !== 0,
+                'grand_total' => $this->decimal($salesInvoice->grand_total),
                 'distributor' => [
                     'name' => $salesInvoice->distributor?->name ?? '—',
-                    'contact_person' => $salesInvoice->distributor?->contact_person,
-                    'phone' => $salesInvoice->distributor?->phone,
                     'address' => $salesInvoice->distributor?->address,
                 ],
                 'lines' => $salesInvoice->lines->map(fn (SalesInvoiceLine $line): array => [
-                    'product_code' => $line->product?->code ?? '—',
                     'product_name' => $line->product?->name_ar ?? '—',
                     'quantity' => QuantityDisplay::format($line->quantity),
-                    'unit_price' => MoneyDisplay::format($line->unit_price, trim: true, thousands: true),
-                    'line_total' => MoneyDisplay::format($line->line_total, trim: true, thousands: true),
+                    'unit_price' => $this->decimal($line->unit_price),
+                    'line_total' => $this->decimal($line->line_total),
                 ])->values()->all(),
             ],
             'app_name' => $settings->app_name,
@@ -49,5 +42,10 @@ class PrintAction
             'invoice_footer' => $settings->invoice_footer,
             'back_url' => route('sales-invoices.create-edit', $salesInvoice),
         ]);
+    }
+
+    private function decimal(mixed $value): string
+    {
+        return number_format((float) ($value ?? 0), 2, '.', '');
     }
 }

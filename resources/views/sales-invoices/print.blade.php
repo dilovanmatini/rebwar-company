@@ -10,21 +10,29 @@
             box-sizing: border-box;
         }
 
+        @page {
+            size: A4;
+            margin: 10mm 12mm;
+        }
+
         body {
             font-family: {!! \App\Support\PrintFont::familyStack() !!};
             direction: rtl;
-            color: #111827;
-            font-size: 12px;
-            line-height: 1.55;
+            color: #111;
+            font-size: 13px;
+            line-height: 1.45;
             margin: 0;
-            padding: 28px 36px;
-            background: #fff;
+            padding: 0;
+            background: #e5e7eb;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
 
         .actions {
-            margin-bottom: 20px;
+            max-width: 210mm;
+            width: 100%;
+            margin: 16px auto 0;
+            padding: 0 12px;
         }
 
         .actions a,
@@ -42,263 +50,282 @@
             font-size: 12px;
         }
 
-        .top {
+        .sheet {
+            width: 100%;
+            max-width: 210mm;
+            min-height: 297mm;
+            margin: 12px auto 24px;
+            padding: 12mm 14mm 10mm;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 24px;
-            margin-bottom: 28px;
+            gap: 16px;
+            margin-bottom: 8px;
         }
 
-        .company {
-            flex: 1;
-            min-width: 0;
+        .brand-en {
+            text-align: left;
+            direction: ltr;
+            color: #1a365d;
         }
 
-        .company-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-
-        .company-brand img {
-            max-height: 72px;
-            max-width: 180px;
-            object-fit: contain;
-        }
-
-        .company-name {
-            font-size: 20px;
-            font-weight: 700;
+        .brand-en .name {
             margin: 0;
-        }
-
-        .company-details {
-            color: #374151;
-            white-space: pre-wrap;
-            line-height: 1.6;
-        }
-
-        .invoice-meta {
-            text-align: end;
-            flex-shrink: 0;
-            min-width: 180px;
-        }
-
-        .invoice-title {
-            margin: 0 0 6px;
-            font-size: 32px;
+            font-size: 26px;
             font-weight: 700;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.01em;
             line-height: 1.1;
         }
 
-        .invoice-number {
-            margin: 0 0 16px;
-            font-size: 13px;
-            color: #111827;
-        }
-
-        .balance-label {
-            margin: 0;
-            font-size: 12px;
-            color: #4b5563;
-        }
-
-        .balance-amount {
+        .brand-en .tag {
             margin: 2px 0 0;
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 700;
-            font-variant-numeric: tabular-nums;
             line-height: 1.2;
+        }
+
+        .brand-ar {
+            text-align: right;
+            color: #2b4c7e;
+        }
+
+        .brand-ar .name {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.15;
+        }
+
+        .brand-ar .tag {
+            margin: 2px 0 0;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .contact {
+            display: grid;
+            grid-template-columns: 1fr 120px 1fr;
+            align-items: center;
+            gap: 8px;
+            border: 1.5px solid #111;
+            padding: 8px 12px;
+            min-height: 78px;
+        }
+
+        .contact-en {
+            direction: ltr;
+            text-align: left;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .contact-ar {
+            text-align: right;
+            font-size: 13px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+        }
+
+        .contact-logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .contact-logo img {
+            max-height: 68px;
+            max-width: 110px;
+            object-fit: contain;
+        }
+
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 16px;
+            margin: 14px 0 16px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .meta-invoice {
+            direction: ltr;
+            text-align: left;
+        }
+
+        .meta-date {
+            unicode-bidi: isolate;
         }
 
         .parties {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            gap: 32px;
-            margin-bottom: 28px;
+            align-items: baseline;
+            gap: 24px;
+            margin-bottom: 10px;
+            font-size: 14px;
         }
 
-        .bill-to {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .section-label {
-            margin: 0 0 6px;
+        .parties .label {
             font-weight: 700;
         }
 
-        .bill-to-name {
-            margin: 0 0 2px;
-            font-weight: 600;
+        .parties > div {
+            min-width: 0;
         }
 
-        .bill-to-line {
-            margin: 0;
-            color: #374151;
-            white-space: pre-wrap;
-        }
-
-        .dates {
-            flex-shrink: 0;
-            border-collapse: collapse;
-        }
-
-        .dates th,
-        .dates td {
-            padding: 2px 0;
-            vertical-align: top;
-            font-weight: 400;
-        }
-
-        .dates th {
-            padding-inline-end: 12px;
-            text-align: end;
-            color: #4b5563;
-            white-space: nowrap;
-        }
-
-        .dates td {
-            text-align: start;
-            font-variant-numeric: tabular-nums;
+        .table-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
         }
 
         table.lines {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 8px;
+            table-layout: fixed;
+            flex: 1;
+            height: 100%;
+            border: 1.5px solid #111;
         }
+
+        table.lines col.amount { width: 16%; }
+        table.lines col.discount { width: 12%; }
+        table.lines col.details { width: auto; }
+        table.lines col.qty { width: 12%; }
+        table.lines col.price { width: 14%; }
 
         table.lines th {
-            background: #7eb6ef;
+            background: #1e4b8c;
             color: #fff;
-            font-weight: 600;
-            padding: 8px 10px;
-            text-align: start;
-            border: none;
-        }
-
-        table.lines th.col-num,
-        table.lines th.col-qty,
-        table.lines th.col-price,
-        table.lines th.col-amount {
-            text-align: end;
-        }
-
-        table.lines th.col-index {
-            width: 36px;
+            font-weight: 700;
+            padding: 7px 8px;
             text-align: center;
+            border: 1px solid #163a6b;
+            font-size: 14px;
         }
 
         table.lines td {
-            padding: 9px 10px;
-            border-bottom: 1px solid #e5e7eb;
-            vertical-align: top;
-            text-align: start;
-        }
-
-        table.lines tbody tr:nth-child(even) td {
-            background: #f9fafb;
-        }
-
-        table.lines td.col-index {
+            padding: 6px 8px;
+            vertical-align: middle;
             text-align: center;
-            color: #6b7280;
-        }
-
-        table.lines td.col-num {
-            text-align: end;
+            border-inline-end: 1px solid #111;
             font-variant-numeric: tabular-nums;
-            white-space: nowrap;
         }
 
-        .line-name {
-            font-weight: 500;
+        table.lines tbody tr.data td {
+            border-bottom: 1px solid #c5cdd6;
         }
 
-        .line-code {
-            color: #6b7280;
-            font-size: 11px;
-            margin-top: 2px;
+        table.lines tbody tr.spacer td {
+            height: 100%;
+            border-bottom: none;
+            padding: 0;
         }
 
-        .summary-wrap {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 4px;
-            margin-bottom: 28px;
-        }
-
-        .summary {
-            width: 260px;
-            border-collapse: collapse;
-        }
-
-        .summary td {
-            padding: 6px 0;
-        }
-
-        .summary .label {
+        table.lines tfoot td {
+            border-top: 1.5px solid #111;
+            padding: 8px 12px 10px;
             text-align: start;
-            color: #374151;
-            padding-inline-end: 16px;
+            vertical-align: top;
         }
 
-        .summary .value {
-            text-align: end;
-            font-variant-numeric: tabular-nums;
-            white-space: nowrap;
-        }
-
-        .summary .total-row td {
-            background: #e5e7eb;
+        .totals {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
             font-weight: 700;
-            padding: 8px 10px;
+            font-size: 14px;
+            width: 100%;
         }
 
-        .notes {
-            margin-bottom: 20px;
-            white-space: pre-wrap;
+        .totals .row {
+            display: flex;
+            justify-content: flex-start;
+            gap: 18px;
+            min-width: 220px;
         }
 
-        .notes strong {
-            display: block;
+        .totals .row .value {
+            font-variant-numeric: tabular-nums;
+            min-width: 90px;
+            text-align: end;
+            direction: ltr;
+        }
+
+        .after-table {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 24px;
+            margin-top: 28px;
+        }
+
+        .signs {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            font-size: 14px;
+        }
+
+        .sign {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .sign .line {
+            border-bottom: 1px solid #111;
+            width: 160px;
+            height: 1px;
             margin-bottom: 4px;
         }
 
-        .footer {
-            margin-top: 24px;
-            padding-top: 14px;
-            border-top: 1px solid #d1d5db;
-            color: #374151;
+        .bottom-date {
+            font-size: 13px;
+            font-variant-numeric: tabular-nums;
+            direction: ltr;
+            unicode-bidi: isolate;
+        }
+
+        .notes {
+            margin-top: 16px;
             white-space: pre-wrap;
-            line-height: 1.7;
+            font-size: 12px;
         }
 
-        .amount-words {
-            margin-top: -12px;
-            margin-bottom: 28px;
-            padding: 10px 12px;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            line-height: 1.7;
-        }
-
-        .amount-words strong {
-            margin-inline-end: 6px;
+        .disclaimer {
+            margin-top: 18px;
+            border: 1.5px solid #111;
+            padding: 6px 10px;
+            text-align: center;
+            font-size: 13px;
         }
 
         @media print {
+            body {
+                background: #fff;
+            }
+
             .actions {
                 display: none;
             }
 
-            body {
-                padding: 16px 20px;
+            .sheet {
+                width: auto;
+                min-height: 277mm;
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
             }
         }
     </style>
@@ -309,115 +336,144 @@
         <a href="{{ $back_url }}">رجوع</a>
     </div>
 
-    <div class="top">
-        <div class="company">
-            <div class="company-brand">
-                <img src="{{ $logo_url }}" alt="{{ $app_name }}">
-                <p class="company-name">{{ $app_name }}</p>
+    <div class="sheet">
+        <div class="brand">
+            <div class="brand-ar">
+                <p class="name">{{ $app_name }}</p>
+                <p class="tag">للتجارة العامة</p>
             </div>
-            @if ($invoice_header)
-                <div class="company-details">{{ $invoice_header }}</div>
-            @endif
+            <div class="brand-en">
+                <p class="name">REBWAR CO.</p>
+                <p class="tag">For General Trading</p>
+            </div>
         </div>
 
-        <div class="invoice-meta">
-            <h1 class="invoice-title">فاتورة</h1>
-            <p class="invoice-number">رقم الفاتورة # {{ $invoice['number'] }}</p>
-            <p class="balance-label">المبلغ المستحق</p>
-            <p class="balance-amount">{{ $invoice['remaining_amount'] }}</p>
-        </div>
-    </div>
-
-    <div class="parties">
-        <div class="bill-to">
-            <p class="section-label">إلى</p>
-            <p class="bill-to-name">{{ $invoice['distributor']['name'] }}</p>
-            @if ($invoice['distributor']['contact_person'])
-                <p class="bill-to-line">{{ $invoice['distributor']['contact_person'] }}</p>
-            @endif
-            @if ($invoice['distributor']['phone'])
-                <p class="bill-to-line">{{ $invoice['distributor']['phone'] }}</p>
-            @endif
-            @if ($invoice['distributor']['address'])
-                <p class="bill-to-line">{{ $invoice['distributor']['address'] }}</p>
-            @endif
+        <div class="contact">
+            <div class="contact-ar">
+                @if ($invoice_header)
+                    {{ $invoice_header }}
+                @else
+                    العنوان: دهوك - خانكي
+                @endif
+            </div>
+            <div class="contact-logo">
+                <img src="{{ $logo_url }}" alt="{{ $app_name }}">
+            </div>
+            <div class="contact-en">
+                @if (! $invoice_header)
+                    Address: DUHOK - KHANKI.<br>
+                    Tel :0750 785 7834<br>
+                    Korek :0750 445 7552
+                @endif
+            </div>
         </div>
 
-        <table class="dates">
-            <tr>
-                <th>تاريخ الفاتورة :</th>
-                <td>{{ $invoice['invoice_date'] ?: '—' }}</td>
-            </tr>
-            <tr>
-                <th>الحالة :</th>
-                <td>{{ $invoice['status_label'] }}</td>
-            </tr>
-        </table>
-    </div>
-
-    <table class="lines">
-        <thead>
-            <tr>
-                <th class="col-index">#</th>
-                <th>البيان</th>
-                <th class="col-qty">الكمية</th>
-                <th class="col-price">السعر</th>
-                <th class="col-amount">المبلغ</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($invoice['lines'] as $index => $line)
-                <tr>
-                    <td class="col-index">{{ $index + 1 }}</td>
-                    <td>
-                        <div class="line-name">{{ $line['product_name'] }}</div>
-                        <div class="line-code">{{ $line['product_code'] }}</div>
-                    </td>
-                    <td class="col-num">{{ $line['quantity'] }}</td>
-                    <td class="col-num">{{ $line['unit_price'] }}</td>
-                    <td class="col-num">{{ $line['line_total'] }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    <div class="summary-wrap">
-        <table class="summary">
-            <tr>
-                <td class="label">المجموع الفرعي</td>
-                <td class="value">{{ $invoice['subtotal'] }}</td>
-            </tr>
-            @if ($invoice['discount'] !== '0')
-                <tr>
-                    <td class="label">الخصم</td>
-                    <td class="value">{{ $invoice['discount'] }}</td>
-                </tr>
-            @endif
-            <tr class="total-row">
-                <td class="label">الإجمالي</td>
-                <td class="value">{{ $invoice['grand_total'] }}</td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="amount-words">
-        <strong>المبلغ كتابةً:</strong>
-        {{ $invoice['grand_total_in_words'] }}
-    </div>
-
-    @if ($invoice['notes'])
-        <div class="notes">
-            <strong>ملاحظات</strong>
-            <div>{{ $invoice['notes'] }}</div>
+        <div class="meta">
+            <div>التاريخ: <span class="meta-date" dir="ltr">{{ $invoice['invoice_date'] }}</span></div>
+            <div class="meta-invoice">Invoice # : {{ $invoice['number'] }}</div>
         </div>
-    @endif
 
-    @if ($invoice_footer)
-        <div class="footer">{{ $invoice_footer }}</div>
-    @endif
+        <div class="parties">
+            <div>
+                <span class="label">حضرة السيد:</span>
+                {{ $invoice['distributor']['name'] }}
+            </div>
+            <div>
+                <span class="label">العنوان:</span>
+                {{ $invoice['distributor']['address'] ?: '—' }}
+            </div>
+        </div>
+
+        <div class="table-box">
+            <table class="lines">
+                <colgroup>
+                    <col class="amount">
+                    <col class="discount">
+                    <col class="details">
+                    <col class="qty">
+                    <col class="price">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>المبلغ</th>
+                        <th>الخصم</th>
+                        <th>التفاصيل</th>
+                        <th>العدد</th>
+                        <th>السعر</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($invoice['lines'] as $line)
+                        <tr class="data">
+                            <td>{{ $line['line_total'] }}</td>
+                            <td></td>
+                            <td>{{ $line['product_name'] }}</td>
+                            <td>{{ $line['quantity'] }}</td>
+                            <td>{{ $line['unit_price'] }}</td>
+                        </tr>
+                    @endforeach
+                    <tr class="spacer">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <div class="totals">
+                                <div class="row">
+                                    <span>المجموع الأولي:</span>
+                                    <span class="value">{{ $invoice['subtotal'] }}</span>
+                                </div>
+                                @if ($invoice['has_discount'])
+                                    <div class="row">
+                                        <span>الخصم:</span>
+                                        <span class="value">{{ $invoice['discount'] }}</span>
+                                    </div>
+                                @endif
+                                <div class="row">
+                                    <span>المجموع النهائي:</span>
+                                    <span class="value">{{ $invoice['grand_total'] }}</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="after-table">
+            <div class="signs">
+                <div class="sign">
+                    <span>اسم السائق</span>
+                    <span class="line"></span>
+                </div>
+                <div class="sign">
+                    <span>رقم السيارة</span>
+                    <span class="line"></span>
+                </div>
+            </div>
+            <div class="bottom-date" dir="ltr">{{ $invoice['invoice_date'] }}</div>
+        </div>
+
+        @if ($invoice['notes'])
+            <div class="notes">{{ $invoice['notes'] }}</div>
+        @endif
+
+        <div class="disclaimer">
+            {{ $invoice_footer ?: 'الغلط و السهو مرجوع للطرفين.' }}
+        </div>
+    </div>
 
     <script>
         window.addEventListener('load', () => {
+            if (new URLSearchParams(window.location.search).has('preview')) {
+                return;
+            }
+
             const triggerPrint = () => window.print();
 
             if (document.fonts?.ready) {

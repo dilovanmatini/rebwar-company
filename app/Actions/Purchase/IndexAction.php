@@ -27,6 +27,7 @@ class IndexAction
                 $search = $filters['search'];
                 $query->where(function (Builder $query) use ($search): void {
                     $query->where('number', 'like', "%{$search}%")
+                        ->orWhere('receipt_number', 'like', "%{$search}%")
                         ->orWhereHas('supplier', function (Builder $query) use ($search): void {
                             $query->where('name', 'like', "%{$search}%");
                         });
@@ -55,6 +56,7 @@ class IndexAction
             ->through(fn (Purchase $purchase): array => [
                 'id' => $purchase->id,
                 'number' => $purchase->number,
+                'receipt_number' => $purchase->receipt_number,
                 'purchase_date' => $purchase->purchase_date?->toDateString(),
                 'supplier' => $purchase->supplier?->only(['id', 'name']),
                 'status' => $purchase->status->value,

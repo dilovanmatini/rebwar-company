@@ -19,6 +19,7 @@ type Props = {
     purchase: {
         id: number;
         number: string;
+        receipt_number: string | null;
         purchase_date: string | null;
         supplier_id: number;
         notes: string | null;
@@ -40,6 +41,7 @@ type Props = {
 
 type PurchaseForm = {
     purchase_date: string;
+    receipt_number: string;
     supplier_id: string;
     notes: string;
     lines: PurchaseLineDraft[];
@@ -56,6 +58,7 @@ export default function PurchasesCreateEdit({
     const form = useForm<PurchaseForm>({
         purchase_date:
             purchase?.purchase_date ?? new Date().toISOString().slice(0, 10),
+        receipt_number: purchase?.receipt_number ?? '',
         supplier_id: purchase ? String(purchase.supplier_id) : '',
         notes: purchase?.notes ?? '',
         lines: purchase
@@ -119,24 +122,6 @@ export default function PurchasesCreateEdit({
                 >
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="grid gap-2">
-                            <Label htmlFor="purchase_date">تاريخ الشراء</Label>
-                            <TextInput
-                                id="purchase_date"
-                                type="date"
-                                value={form.data.purchase_date}
-                                disabled={!can_edit}
-                                onChange={(event) =>
-                                    form.setData(
-                                        'purchase_date',
-                                        event.target.value,
-                                    )
-                                }
-                                required
-                            />
-                            <InputError message={form.errors.purchase_date} />
-                        </div>
-
-                        <div className="grid gap-2">
                             <Label htmlFor="supplier_id">المورد</Label>
                             <AsyncSearchableSelect
                                 id="supplier_id"
@@ -163,6 +148,43 @@ export default function PurchasesCreateEdit({
                                 }
                             />
                             <InputError message={form.errors.supplier_id} />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="purchase_date">تاريخ الشراء</Label>
+                            <TextInput
+                                id="purchase_date"
+                                type="date"
+                                value={form.data.purchase_date}
+                                disabled={!can_edit}
+                                onChange={(event) =>
+                                    form.setData(
+                                        'purchase_date',
+                                        event.target.value,
+                                    )
+                                }
+                                required
+                            />
+                            <InputError message={form.errors.purchase_date} />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="receipt_number">رقم الوصل</Label>
+                            <TextInput
+                                id="receipt_number"
+                                name="receipt_number"
+                                value={form.data.receipt_number}
+                                disabled={!can_edit}
+                                onChange={(event) =>
+                                    form.setData(
+                                        'receipt_number',
+                                        event.target.value,
+                                    )
+                                }
+                                required
+                                placeholder="رقم وصل المشتريات"
+                            />
+                            <InputError message={form.errors.receipt_number} />
                         </div>
                     </div>
 

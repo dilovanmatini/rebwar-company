@@ -20,6 +20,7 @@ class CreateEditAction
                 'purchase' => [
                     'id' => $purchase->id,
                     'number' => $purchase->number,
+                    'receipt_number' => $purchase->receipt_number,
                     'purchase_date' => $purchase->purchase_date?->toDateString(),
                     'supplier_id' => $purchase->supplier_id,
                     'notes' => $purchase->notes,

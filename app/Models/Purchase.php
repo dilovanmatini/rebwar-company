@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'number',
+    'receipt_number',
     'purchase_date',
     'supplier_id',
     'notes',

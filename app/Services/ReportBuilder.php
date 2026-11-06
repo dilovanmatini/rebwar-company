@@ -133,6 +133,7 @@ class ReportBuilder
     {
         $columns = [
             ['key' => 'number', 'label' => 'الرقم'],
+            ['key' => 'receipt_number', 'label' => 'رقم الوصل'],
             ['key' => 'purchase_date', 'label' => 'التاريخ'],
             ['key' => 'supplier', 'label' => 'المورد'],
             ['key' => 'lines_count', 'label' => 'عدد العناصر'],
@@ -150,6 +151,7 @@ class ReportBuilder
             ->get()
             ->map(fn (Purchase $purchase): array => [
                 'number' => $purchase->number,
+                'receipt_number' => $purchase->receipt_number,
                 'purchase_date' => $purchase->purchase_date?->toDateString(),
                 'supplier' => $purchase->supplier?->name,
                 'lines_count' => (string) $purchase->lines_count,

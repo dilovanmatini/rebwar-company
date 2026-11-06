@@ -21,6 +21,7 @@ class PurchaseFactory extends Factory
     {
         return [
             'number' => 'PUR-'.str_pad((string) fake()->unique()->numberBetween(1, 999999), 6, '0', STR_PAD_LEFT),
+            'receipt_number' => fake()->unique()->numerify('######'),
             'purchase_date' => fake()->date(),
             'supplier_id' => Supplier::factory(),
             'notes' => fake()->optional()->sentence(),

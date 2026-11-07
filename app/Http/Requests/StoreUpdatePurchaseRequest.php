@@ -27,6 +27,16 @@ class StoreUpdatePurchaseRequest extends FormRequest
         if ($this->notes === '') {
             $this->merge(['notes' => null]);
         }
+
+        $receiptNumber = $this->input('receipt_number');
+
+        if (is_string($receiptNumber)) {
+            $receiptNumber = trim($receiptNumber);
+
+            $this->merge([
+                'receipt_number' => $receiptNumber === '' ? null : $receiptNumber,
+            ]);
+        }
     }
 
     /**
@@ -41,6 +51,7 @@ class StoreUpdatePurchaseRequest extends FormRequest
 
             return [
                 'purchase_date' => ['required', 'date'],
+                'receipt_number' => ['required', 'string', 'max:100'],
                 'supplier_id' => [
                     'required',
                     'integer',
@@ -69,6 +80,7 @@ class StoreUpdatePurchaseRequest extends FormRequest
 
         return [
             'purchase_date' => ['required', 'date'],
+            'receipt_number' => ['required', 'string', 'max:100'],
             'supplier_id' => [
                 'required',
                 'integer',
@@ -93,6 +105,7 @@ class StoreUpdatePurchaseRequest extends FormRequest
     {
         return [
             'purchase_date' => 'تاريخ الشراء',
+            'receipt_number' => 'رقم الوصل',
             'supplier_id' => 'المورد',
             'notes' => 'ملاحظات',
             'lines' => 'العناصر',

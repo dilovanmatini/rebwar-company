@@ -23,6 +23,7 @@ class StoreUpdateAction
 
                 $purchase->update([
                     'purchase_date' => $data['purchase_date'],
+                    'receipt_number' => $data['receipt_number'],
                     'supplier_id' => $data['supplier_id'],
                     'notes' => $data['notes'] ?? null,
                 ]);
@@ -40,6 +41,7 @@ class StoreUpdateAction
 
             $purchase = Purchase::query()->create([
                 'number' => $this->numbers->generate(DocumentType::Purchase),
+                'receipt_number' => $data['receipt_number'],
                 'purchase_date' => $data['purchase_date'],
                 'supplier_id' => $data['supplier_id'],
                 'notes' => $data['notes'] ?? null,

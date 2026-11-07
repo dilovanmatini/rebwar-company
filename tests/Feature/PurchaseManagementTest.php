@@ -39,6 +39,7 @@ test('administrator can create a draft purchase with lines', function () {
     $this->actingAs($admin)
         ->post(route('purchases.store-update'), [
             'purchase_date' => '2026-08-07',
+            'receipt_number' => '  وصل-8841  ',
             'supplier_id' => $supplier->id,
             'notes' => 'اختبار',
             'lines' => [
@@ -51,6 +52,7 @@ test('administrator can create a draft purchase with lines', function () {
 
     expect($purchase)->not->toBeNull()
         ->and($purchase->number)->toStartWith('PUR-')
+        ->and($purchase->receipt_number)->toBe('وصل-8841')
         ->and($purchase->status)->toBe(DocumentStatus::Draft)
         ->and($purchase->lines)->toHaveCount(1)
         ->and((string) $purchase->lines->first()->quantity)->toBe('12.500');
@@ -124,6 +126,40 @@ test('sales role cannot manage purchases', function () {
         ->assertForbidden();
 });
 
+test('draft purchase requires a receipt number', function () {
+    $admin = User::factory()->administrator()->create();
+    $supplier = Supplier::factory()->create(['is_active' => true]);
+    $product = Product::factory()->create(['is_active' => true]);
+
+    $this->actingAs($admin)
+        ->post(route('purchases.store-update'), [
+            'purchase_date' => '2026-08-07',
+            'receipt_number' => '   ',
+            'supplier_id' => $supplier->id,
+            'lines' => [
+                ['product_id' => $product->id, 'quantity' => 1],
+            ],
+        ])
+        ->assertSessionHasErrors('receipt_number');
+
+    expect(Purchase::query()->count())->toBe(0);
+});
+
+test('purchases index can search by receipt number', function () {
+    $admin = User::factory()->administrator()->create();
+    $match = Purchase::factory()->create(['receipt_number' => 'وصل-8841']);
+    Purchase::factory()->create(['receipt_number' => 'وصل-1000']);
+
+    $this->actingAs($admin)
+        ->get(route('purchases.index', ['search' => '8841']))
+        ->assertSuccessful()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('purchases/index')
+            ->has('purchases.data', 1)
+            ->where('purchases.data.0.id', $match->id)
+            ->where('purchases.data.0.receipt_number', 'وصل-8841'));
+});
+
 test('draft purchase without lines cannot be posted', function () {
     $admin = User::factory()->administrator()->create();
     $purchase = Purchase::factory()->create();
@@ -156,6 +192,7 @@ test('updating a draft purchase replaces lines', function () {
     $this->actingAs($admin)
         ->post(route('purchases.store-update', $purchase), [
             'purchase_date' => '2026-08-09',
+            'receipt_number' => 'وصل-2200',
             'supplier_id' => $supplier->id,
             'notes' => null,
             'lines' => [
@@ -166,7 +203,8 @@ test('updating a draft purchase replaces lines', function () {
 
     $purchase->refresh()->load('lines');
 
-    expect($purchase->lines)->toHaveCount(1)
+    expect($purchase->receipt_number)->toBe('وصل-2200')
+        ->and($purchase->lines)->toHaveCount(1)
         ->and($purchase->lines->first()->product_id)->toBe($newProduct->id)
         ->and((string) $purchase->lines->first()->quantity)->toBe('8.000');
 });

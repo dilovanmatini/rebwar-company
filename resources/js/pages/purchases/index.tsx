@@ -30,6 +30,7 @@ import { createEdit, index } from '@/routes/purchases';
 type PurchaseRow = {
     id: number;
     number: string;
+    receipt_number: string | null;
     purchase_date: string | null;
     supplier: { id: number; name: string } | null;
     status: 'draft' | 'posted' | 'cancelled';
@@ -144,7 +145,7 @@ export default function PurchasesIndex({
                         <SearchFilter
                             url={index.url()}
                             initial={filters.search}
-                            placeholder="بحث بالرقم أو اسم المورد..."
+                            placeholder="بحث بالرقم أو رقم الوصل أو اسم المورد..."
                             className="max-w-none grow sm:max-w-md"
                             params={filterParams}
                         />
@@ -240,6 +241,9 @@ export default function PurchasesIndex({
                                         الرقم
                                     </TableHeadCell>
                                     <TableHeadCell className="text-start">
+                                        رقم الوصل
+                                    </TableHeadCell>
+                                    <TableHeadCell className="text-start">
                                         التاريخ
                                     </TableHeadCell>
                                     <TableHeadCell className="text-start">
@@ -257,7 +261,7 @@ export default function PurchasesIndex({
                                 {purchases.data.length === 0 ? (
                                     <TableRow>
                                         <TableCell
-                                            colSpan={5}
+                                            colSpan={6}
                                             className="py-10 text-center text-gray-500"
                                         >
                                             لا توجد مشتريات
@@ -280,6 +284,9 @@ export default function PurchasesIndex({
                                                 >
                                                     {purchase.number}
                                                 </Link>
+                                            </TableCell>
+                                            <TableCell className="text-start">
+                                                {purchase.receipt_number ?? '—'}
                                             </TableCell>
                                             <TableCell className="text-start">
                                                 {purchase.purchase_date ?? '—'}
